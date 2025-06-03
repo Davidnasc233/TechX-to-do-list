@@ -1,5 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { TodolistComponent } from './todolist/todolist.component';
+import { FormsModule, NgForm } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+
+@NgModule({
+  declarations: [
+    Component,
+    TodolistComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule
+  ],
+  bootstrap: [Component]
+})
+export class AppModule { }
 
 @Component({
   selector: 'app-root',

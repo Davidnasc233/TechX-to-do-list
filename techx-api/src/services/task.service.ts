@@ -1,19 +1,26 @@
-import { db } from '../config/database';
-import { Task } from '../models/task.model';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
-export const getAllTasks = async (): Promise<Task[]> => {
-  const [rows] = await db.query('SELECT * FROM tasks');
-  return rows as Task[];
-};
+@Injectable({ providedIn: 'root' })
+export class TaskService {
+  private apiUrl = 'http://localhost:3000/tasks';
 
-export const createTask = async (task: Task): Promise<void> => {
-  await db.query('INSERT INTO tasks (title, completed) VALUES (?, ?)', [task.title, task.completed]);
-};
+  constructor(private http: HttpClient) {}
 
-export const updateTask = async (id: number, task: Task): Promise<void> => {
-  await db.query('UPDATE tasks SET title = ?, completed = ? WHERE id = ?', [task.title, task.completed, id]);
-};
+  getTasks(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
+  }
 
-export const deleteTask = async (id: number): Promise<void> => {
-  await db.query('DELETE FROM tasks WHERE id = ?', [id]);
-};
+  addTask(title: string): Observable<any> {
+    return this.http.post(this.apiUrl, { title });
+  }
+
+  deleteTask(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  updateTask(task: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${task.id}`, task);
+  }
+}
